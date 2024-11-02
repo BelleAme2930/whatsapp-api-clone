@@ -14,7 +14,18 @@ class UserJoinedChatroom implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    /**
+     * The user who joined the chatroom.
+     *
+     * @var User
+     */
     public User $user;
+
+    /**
+     * The chatroom ID.
+     *
+     * @var int
+     */
     public int $chatroomId;
 
     /**
@@ -22,6 +33,7 @@ class UserJoinedChatroom implements ShouldBroadcast
      *
      * @param  User  $user
      * @param  int  $chatroomId
+     * @return void
      */
     public function __construct(User $user, int $chatroomId)
     {
@@ -32,27 +44,24 @@ class UserJoinedChatroom implements ShouldBroadcast
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return array<int, Channel>
+     * @return Channel|PresenceChannel
      */
-    public function broadcastOn(): array
+    public function broadcastOn(): Channel|PresenceChannel
     {
-        return [
-            new PresenceChannel('chatroom.' . $this->chatroomId),
-        ];
+        return new PresenceChannel('chatroom.' . $this->chatroomId);
     }
 
     /**
-     * Prepare the data to be broadcast with the event.
+     * Get the data to broadcast.
      *
      * @return array
      */
     public function broadcastWith(): array
     {
         return [
-            'user' => [
-                'id' => $this->user->id,
-                'name' => $this->user->name,
-            ],
+            'user_id' => $this->user->id,
+            'user_name' => $this->user->name,
+            'joined_at' => now()->toDateTimeString(),
         ];
     }
 }

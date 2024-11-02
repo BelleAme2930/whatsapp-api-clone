@@ -3,8 +3,9 @@
 namespace App\Events;
 
 use App\Models\Message;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -13,6 +14,11 @@ class MessageSent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    /**
+     * The message instance.
+     *
+     * @var Message
+     */
     public Message $message;
 
     /**
@@ -29,22 +35,29 @@ class MessageSent implements ShouldBroadcast
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return array
+     * @return Channel|PresenceChannel
      */
-    public function broadcastOn(): array
+    public function broadcastOn(): Channel|PresenceChannel
     {
-        return [
-            new PrivateChannel('chatroom.' . $this->message->chatroom_id),
-        ];
+        return new PresenceChannel('chatroom.' . $this->message->chatroom_id);
     }
 
     /**
-     * Get the name of the event.
+     * Get the data to broadcast.
      *
-     * @return string
+     * @return array
      */
-    public function broadcastAs(): string
+    public function broadcastWith(): array
     {
-        return 'message.sent';
+        return [
+            'id' => $this->message->id,
+            'user_id' => $this->message->user_id,
+            'chatroom_id' => $this->message->chatroom_id,
+            'message' => $this->message->message,
+            'attachment_url' => $this->message->attachment_path
+                ? url('storage/' . $this->message->attachment_path)
+                : null,
+            'created_at' => $this->message->created_at->toDateTimeString(),
+        ];
     }
 }

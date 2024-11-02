@@ -27,7 +27,6 @@ class MessageController extends Controller
         }
 
         $user = $request->user();
-
         $this->ensureAttachmentDirectoriesExist();
 
         $attachmentPath = $this->handleAttachmentUpload($request);

@@ -3,66 +3,55 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class AuthenticatedSessionController extends Controller
 {
     /**
      * Handle an incoming authentication request.
      *
-     * @param  LoginRequest  $request
+     * @param  Request  $request
      * @return JsonResponse
+     * @throws ValidationException
      */
-    public function store(LoginRequest $request): JsonResponse
+    public function store(Request $request): JsonResponse
     {
-        $request->authenticate();
+        $this->validateLogin($request);
+
+        if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect.'],
+            ]);
+        }
 
         $user = Auth::user();
 
-        if (!$user) {
-            return response()->json(['message' => 'User not authenticated.'], 401);
-        }
-
         return response()->json([
-            'message' => 'Login successful.',
-            'token' => $user->createToken($user->name . ' Token')->plainTextToken,
-            'user' => $this->formatUserResponse($user),
-        ], 200);
+            'message' => 'User logged in successfully.',
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'created_at' => $user->created_at->format('Y-m-d'),
+            ],
+        ]);
     }
 
     /**
-     * Destroy an authenticated session.
+     * Validate the login request.
      *
      * @param  Request  $request
-     * @return JsonResponse
+     * @return void
+     * @throws ValidationException
      */
-    public function destroy(Request $request): JsonResponse
+    protected function validateLogin(Request $request): void
     {
-        $user = $request->user();
-
-        if ($user) {
-            $user->currentAccessToken()->delete();
-        }
-
-        return response()->json(['message' => 'Logout successful.'], 200);
-    }
-
-    /**
-     * Format the user response.
-     *
-     * @param  mixed  $user
-     * @return array
-     */
-    protected function formatUserResponse($user): array
-    {
-        return [
-            'id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-            'created_at' => $user->created_at->format('Y-m-d'),
-        ];
+        $request->validate([
+            'email' => ['required', 'string', 'email'],
+            'password' => ['required', 'string'],
+        ]);
     }
 }

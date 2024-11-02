@@ -70,7 +70,6 @@ class ChatroomController extends Controller
         }
 
         $chatroom->members()->attach($user->id);
-
         event(new UserJoinedChatroom($user, $chatroomId));
 
         return response()->json(['message' => 'Successfully entered the chatroom']);
@@ -93,7 +92,6 @@ class ChatroomController extends Controller
         }
 
         $chatroom->members()->detach($user->id);
-
         event(new UserLeftChatroom($user, $chatroomId));
 
         return response()->json(['message' => 'Successfully left the chatroom']);
