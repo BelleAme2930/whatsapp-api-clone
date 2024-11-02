@@ -21,7 +21,7 @@
         <section class="bg-white p-8 rounded-lg shadow-md mb-8">
             <h2 class="text-2xl font-semibold text-gray-800 mb-4">About This Project</h2>
             <p class="text-gray-700">
-                This project is a clone of the WhatsApp API server, designed to replicate core functionalities such as creating chatrooms, sending messages, and managing chat interactions in real-time. It leverages Laravel and WebSocket for an efficient, responsive experience.
+                This project is a clone of the WhatsApp API server, designed to replicate core functionalities such as creating chat-rooms, sending messages, and managing chat interactions in real-time. It leverages Laravel and WebSocket for an efficient, responsive experience.
             </p>
         </section>
 
@@ -32,8 +32,8 @@
                 This project is a fully functional backend solution ready to be integrated with any frontend application. It features:
             </p>
             <ul class="list-disc list-inside text-gray-700 mt-4 space-y-2">
-                <li><strong>WebSocket functionality:</strong> Ensures real-time messaging and updates across chatrooms.</li>
-                <li><strong>Multithreading support:</strong> Efficiently handles concurrent operations, providing smooth performance.</li>
+                <li><strong>WebSocket functionality:</strong> Ensures real-time messaging and updates across chat-rooms.</li>
+                <li><strong>Multithreading support:</strong> Efficiently handles concurrent operations, providing smooth performance using laravel octane with RoadRunner.</li>
                 <li><strong>Comprehensive features:</strong> All core functionalities of a WhatsApp-like API, including chatroom management, message history, file attachments, and more.</li>
             </ul>
         </section>
@@ -53,15 +53,15 @@
         <section class="bg-white p-8 rounded-lg shadow-md mb-8">
             <h2 class="text-2xl font-semibold text-gray-800 mb-4">Key Features</h2>
             <ul class="list-disc list-inside text-gray-700 space-y-2">
-                <li>Create and manage chatrooms, allowing users to join or leave at any time.</li>
-                <li>List all available chatrooms, making it easy for users to discover active conversations.</li>
-                <li>Enable users to send and receive text messages seamlessly within chatrooms.</li>
+                <li>Create and manage chat-rooms, allowing users to join or leave at any time.</li>
+                <li>List all available chat-rooms, making it easy for users to discover active conversations.</li>
+                <li>Enable users to send and receive text messages seamlessly within chat-rooms.</li>
                 <li>Support for file attachments in messages with no size limit, allowing users to share pictures and videos.
                     <ul class="list-disc list-inside ml-6">
                         <li>Attachments are saved on the server in designated directories (`root/picture`, `root/video`).</li>
                     </ul>
                 </li>
-                <li>Real-time messaging powered by WebSocket, ensuring instant updates across chatrooms for all connected users.</li>
+                <li>Real-time messaging powered by WebSocket, ensuring instant updates across chat-rooms for all connected users.</li>
                 <li>Users automatically connect to the socket upon entering each chatroom, providing real-time engagement.</li>
                 <li>Message history available for each chatroom, providing users with context for ongoing conversations.</li>
                 <li>Multi-threading is used to handle chat features efficiently, ensuring smooth and responsive performance.</li>
@@ -77,7 +77,7 @@
                 Follow these steps to interact with the API:
             </p>
             <ol class="list-decimal list-inside text-gray-700 mt-4 space-y-2">
-                <li>Create a new chatroom by sending a POST request to the <code class="bg-gray-100 text-green-600 px-2 py-1 rounded">/api/chatrooms</code> endpoint.</li>
+                <li>Create a new chatroom by sending a POST request to the <code class="bg-gray-100 text-green-600 px-2 py-1 rounded">/api/chat-rooms</code> endpoint.</li>
                 <li>Join a chatroom and send messages using the <code class="bg-gray-100 text-green-600 px-2 py-1 rounded">/api/messages</code> endpoint.</li>
                 <li>Use WebSocket for real-time updates; users in the same chatroom will see messages instantly.</li>
             </ol>
