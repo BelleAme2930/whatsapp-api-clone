@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
@@ -18,21 +17,15 @@ class RegisteredUserController extends Controller
     /**
      * Handle an incoming registration request.
      *
+     * @param  Request  $request
+     * @return JsonResponse
      * @throws ValidationException
      */
     public function store(Request $request): JsonResponse
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        $this->validateRegistration($request);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->string('password')),
-        ]);
+        $user = $this->createUser($request);
 
         event(new Registered($user));
 
@@ -40,12 +33,54 @@ class RegisteredUserController extends Controller
 
         return response()->json([
             'message' => 'User registered successfully.',
-            'user' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'created_at' => $user->created_at->format('Y-m-d'),
-            ],
+            'user' => $this->formatUserResponse($user),
         ], 201);
+    }
+
+    /**
+     * Validate the registration request.
+     *
+     * @param  Request  $request
+     * @return void
+     * @throws ValidationException
+     */
+    protected function validateRegistration(Request $request): void
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+    }
+
+    /**
+     * Create a new user instance after a valid registration.
+     *
+     * @param  Request  $request
+     * @return User
+     */
+    protected function createUser(Request $request): User
+    {
+        return User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+    }
+
+    /**
+     * Format the user response.
+     *
+     * @param  User  $user
+     * @return array
+     */
+    protected function formatUserResponse(User $user): array
+    {
+        return [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'created_at' => $user->created_at->format('Y-m-d'),
+        ];
     }
 }

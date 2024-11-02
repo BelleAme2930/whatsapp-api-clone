@@ -7,5 +7,5 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('chatroom.{chatroomId}', function ($user, $chatroomId) {
-    return $user->chatrooms->contains($chatroomId);
+    return true;
 });
