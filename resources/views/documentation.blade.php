@@ -89,7 +89,13 @@
 <body class="bg-gray-50 text-gray-900">
 <div class="container mx-auto p-8">
     <h1 class="text-3xl font-bold mb-3 text-green-600 text-center">API Documentation</h1>
-    <h1 class="text-xl font-semibold mb-6 text-center">Base URL: <a href=""></a></h1>
+    <section class="bg-white p-8 rounded-lg shadow-md mb-8">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">API Base URL</h2>
+        <p class="text-gray-700 mb-2">
+            The base URL for accessing the API is:
+        </p>
+        <code class="block bg-gray-100 text-green-600 px-4 py-2 rounded">https://whatsapp-api-clone.umairsaif.net/api/</code>
+    </section>
     <div class="prose max-w-none">
         {!! $content !!}
     </div>
