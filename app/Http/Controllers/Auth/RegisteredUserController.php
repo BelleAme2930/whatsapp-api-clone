@@ -25,6 +25,12 @@ class RegisteredUserController extends Controller
     {
         $this->validateRegistration($request);
 
+        if (User::where('email', $request->email)->exists()) {
+            return response()->json([
+                'message' => 'The email has already been taken. Please choose another one.',
+            ], 409);
+        }
+
         $user = $this->createUser($request);
 
         event(new Registered($user));
@@ -48,7 +54,7 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'email' => ['required', 'string', 'email', 'lowercase', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
     }

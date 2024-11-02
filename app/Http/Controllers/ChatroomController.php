@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
+use App\Events\UserJoinedChatroom;
+use App\Events\UserLeftChatroom;
 use App\Models\Chatroom;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -68,6 +71,8 @@ class ChatroomController extends Controller
 
         $chatroom->members()->attach($user->id);
 
+        event(new UserJoinedChatroom($user, $chatroomId));
+
         return response()->json(['message' => 'Successfully entered the chatroom']);
     }
 
@@ -88,6 +93,8 @@ class ChatroomController extends Controller
         }
 
         $chatroom->members()->detach($user->id);
+
+        event(new UserLeftChatroom($user, $chatroomId));
 
         return response()->json(['message' => 'Successfully left the chatroom']);
     }

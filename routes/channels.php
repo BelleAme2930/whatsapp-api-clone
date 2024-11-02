@@ -9,3 +9,10 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 Broadcast::channel('chatroom.{chatroomId}', function ($user, $chatroomId) {
     return true;
 });
+
+Broadcast::channel('chatroom.{chatroomId}', function ($user, $chatroomId) {
+    return [
+        'id' => $user->id,
+        'name' => $user->name,
+    ];
+});
