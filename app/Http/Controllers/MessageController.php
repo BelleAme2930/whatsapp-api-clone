@@ -54,6 +54,8 @@ class MessageController extends Controller
             'attachment_path' => $attachmentPath,
         ]);
 
+        event(new MessageSent($message));
+
         return response()->json($message, 201);
     }
 
