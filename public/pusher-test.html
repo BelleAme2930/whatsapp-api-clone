@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pusher Test</title>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <script>
+
+        const pusher = new Pusher('6cf3a8a4cc81717824c3', {
+            cluster: 'ap2',
+            encrypted: true,
+        });
+
+
+        const channel = pusher.subscribe('chatroom.1');
+        console.log(channel)
+
+        channel.bind('message.sent', function(data) {
+            console.log('Received message:', data);
+        });
+    </script>
+</head>
+<body>
+<h1>Pusher Test</h1>
+<p>Open the console to see incoming messages.</p>
+</body>
+</html>
