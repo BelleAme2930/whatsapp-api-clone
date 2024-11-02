@@ -88,7 +88,8 @@
 </head>
 <body class="bg-gray-50 text-gray-900">
 <div class="container mx-auto p-8">
-    <h1 class="text-3xl font-bold mb-6 text-green-600 text-center">API Documentation</h1>
+    <h1 class="text-3xl font-bold mb-3 text-green-600 text-center">API Documentation</h1>
+    <h1 class="text-xl font-semibold mb-6 text-center">Base URL: <a href=""></a></h1>
     <div class="prose max-w-none">
         {!! $content !!}
     </div>

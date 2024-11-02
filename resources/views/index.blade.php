@@ -25,6 +25,26 @@
             </p>
         </section>
 
+        <!-- API Base URL Section -->
+        <section class="bg-white p-8 rounded-lg shadow-md mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">API Base URL</h2>
+            <p class="text-gray-700 mb-2">
+                The base URL for accessing the API is:
+            </p>
+            <code class="block bg-gray-100 text-green-600 px-4 py-2 rounded">https://whatsapp-api-clone.umairsaif.net/api/</code>
+        </section>
+
+        <!-- API Documentation Section -->
+        <section class="bg-white p-8 rounded-lg shadow-md mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">API Documentation</h2>
+            <p class="text-gray-700">
+                Access the full API documentation, including endpoint details, request formats, and response examples.
+            </p>
+            <a href="/docs" target="_blank" class="inline-block mt-4 px-4 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition">
+                View Markdown API Documentation
+            </a>
+        </section>
+
         <!-- Backend Overview Section -->
         <section class="bg-white p-8 rounded-lg shadow-md mb-8">
             <h2 class="text-2xl font-semibold text-gray-800 mb-4">Backend Overview</h2>
@@ -38,33 +58,22 @@
             </ul>
         </section>
 
-        <!-- API Documentation Section -->
-        <section class="bg-white p-8 rounded-lg shadow-md mb-8">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">API Documentation</h2>
-            <p class="text-gray-700">
-                Access the full API documentation, including endpoint details, request formats, and response examples.
-            </p>
-            <a href="/docs" class="inline-block mt-4 px-4 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition">
-                View Markdown API Documentation
-            </a>
-        </section>
-
         <!-- Key Features Section -->
         <section class="bg-white p-8 rounded-lg shadow-md mb-8">
             <h2 class="text-2xl font-semibold text-gray-800 mb-4">Key Features</h2>
             <ul class="list-disc list-inside text-gray-700 space-y-2">
-                <li>Create and manage chat-rooms, allowing users to join or leave at any time.</li>
-                <li>List all available chat-rooms, making it easy for users to discover active conversations.</li>
-                <li>Enable users to send and receive text messages seamlessly within chat-rooms.</li>
+                <li>Create and manage chatrooms, allowing users to join or leave at any time.</li>
+                <li>List all available chatrooms, making it easy for users to discover active conversations.</li>
+                <li>Enable users to send and receive text messages seamlessly within chatrooms.</li>
                 <li>Support for file attachments in messages with no size limit, allowing users to share pictures and videos.
                     <ul class="list-disc list-inside ml-6">
                         <li>Attachments are saved on the server in designated directories (`root/picture`, `root/video`).</li>
                     </ul>
                 </li>
-                <li>Real-time messaging powered by WebSocket, ensuring instant updates across chat-rooms for all connected users.</li>
+                <li>Real-time messaging powered by Pusher, ensuring instant updates across chatrooms for all connected users.</li>
                 <li>Users automatically connect to the socket upon entering each chatroom, providing real-time engagement.</li>
                 <li>Message history available for each chatroom, providing users with context for ongoing conversations.</li>
-                <li>Multi-threading is used to handle chat features efficiently, ensuring smooth and responsive performance.</li>
+                <li>Multi-threading is managed using Laravel Octane with RoadRunner, ensuring smooth and responsive performance.</li>
                 <li>Designed to follow the MVC pattern, ensuring a structured and maintainable codebase.</li>
                 <li>Built-in maximum member count for each chatroom, preventing overcrowding and managing server load effectively.</li>
             </ul>
@@ -77,7 +86,7 @@
                 Follow these steps to interact with the API:
             </p>
             <ol class="list-decimal list-inside text-gray-700 mt-4 space-y-2">
-                <li>Create a new chatroom by sending a POST request to the <code class="bg-gray-100 text-green-600 px-2 py-1 rounded">/api/chat-rooms</code> endpoint.</li>
+                <li>Create a new chatroom by sending a POST request to the <code class="bg-gray-100 text-green-600 px-2 py-1 rounded">/api/chatrooms</code> endpoint.</li>
                 <li>Join a chatroom and send messages using the <code class="bg-gray-100 text-green-600 px-2 py-1 rounded">/api/messages</code> endpoint.</li>
                 <li>Use WebSocket for real-time updates; users in the same chatroom will see messages instantly.</li>
             </ol>
