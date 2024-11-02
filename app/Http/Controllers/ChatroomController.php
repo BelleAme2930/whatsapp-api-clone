@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chatroom;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -10,8 +11,11 @@ class ChatroomController extends Controller
 {
     /**
      * Create a new chatroom.
+     *
+     * @param  Request  $request
+     * @return JsonResponse
      */
-    public function createChatroom(Request $request)
+    public function createChatroom(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -22,18 +26,17 @@ class ChatroomController extends Controller
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
-        $chatroom = Chatroom::create([
-            'name' => $request->name,
-            'max_members' => $request->max_members,
-        ]);
+        $chatroom = Chatroom::create($validator->validated());
 
         return response()->json($chatroom, 201);
     }
 
     /**
      * List all chatrooms.
+     *
+     * @return JsonResponse
      */
-    public function listChatrooms()
+    public function listChatrooms(): JsonResponse
     {
         $chatrooms = Chatroom::all();
         return response()->json($chatrooms);
@@ -41,21 +44,25 @@ class ChatroomController extends Controller
 
     /**
      * Enter a chatroom.
+     *
+     * @param  Request  $request
+     * @param  int  $chatroomId
+     * @return JsonResponse
      */
-    public function enterChatroom(Request $request, $chatroomId)
+    public function enterChatroom(Request $request, int $chatroomId): JsonResponse
     {
         $user = $request->user();
+        $chatroom = $this->findChatroom($chatroomId);
 
-        $chatroom = Chatroom::find($chatroomId);
         if (!$chatroom) {
             return response()->json(['message' => 'Chatroom not found'], 404);
         }
 
-        if ($chatroom->members()->where('user_id', $user->id)->exists()) {
+        if ($this->userInChatroom($user, $chatroom)) {
             return response()->json(['message' => 'User already in the chatroom'], 400);
         }
 
-        if ($chatroom->members()->count() >= $chatroom->max_members) {
+        if ($this->chatroomIsFull($chatroom)) {
             return response()->json(['message' => 'Chatroom is full'], 400);
         }
 
@@ -66,12 +73,16 @@ class ChatroomController extends Controller
 
     /**
      * Leave a chatroom.
+     *
+     * @param  Request  $request
+     * @param  int  $chatroomId
+     * @return JsonResponse
      */
-    public function leaveChatroom(Request $request, $chatroomId)
+    public function leaveChatroom(Request $request, int $chatroomId): JsonResponse
     {
         $user = $request->user();
+        $chatroom = $this->findChatroom($chatroomId);
 
-        $chatroom = Chatroom::find($chatroomId);
         if (!$chatroom) {
             return response()->json(['message' => 'Chatroom not found'], 404);
         }
@@ -79,5 +90,39 @@ class ChatroomController extends Controller
         $chatroom->members()->detach($user->id);
 
         return response()->json(['message' => 'Successfully left the chatroom']);
+    }
+
+    /**
+     * Find a chatroom by its ID.
+     *
+     * @param  int  $chatroomId
+     * @return Chatroom|null
+     */
+    protected function findChatroom(int $chatroomId): ?Chatroom
+    {
+        return Chatroom::find($chatroomId);
+    }
+
+    /**
+     * Check if the user is already in the chatroom.
+     *
+     * @param  mixed  $user
+     * @param  Chatroom  $chatroom
+     * @return bool
+     */
+    protected function userInChatroom($user, Chatroom $chatroom): bool
+    {
+        return $chatroom->members()->where('user_id', $user->id)->exists();
+    }
+
+    /**
+     * Check if the chatroom is full.
+     *
+     * @param  Chatroom  $chatroom
+     * @return bool
+     */
+    protected function chatroomIsFull(Chatroom $chatroom): bool
+    {
+        return $chatroom->members()->count() >= $chatroom->max_members;
     }
 }
