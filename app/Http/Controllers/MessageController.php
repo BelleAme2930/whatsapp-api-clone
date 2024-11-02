@@ -6,12 +6,12 @@ use App\Events\MessageSent;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Broadcast;
+use Illuminate\Support\Facades\Storage;
 
 class MessageController extends Controller
 {
     /**
-     * Send a message to a chatroom.
+     * Send a message to a chatroom with an optional attachment.
      */
     public function sendMessage(Request $request, $chatroomId)
     {
@@ -26,9 +26,25 @@ class MessageController extends Controller
 
         $user = $request->user();
 
+        if (!Storage::disk('public')->exists('root/picture')) {
+            Storage::disk('public')->makeDirectory('root/picture');
+        }
+        if (!Storage::disk('public')->exists('root/video')) {
+            Storage::disk('public')->makeDirectory('root/video');
+        }
+
         $attachmentPath = null;
         if ($request->hasFile('attachment')) {
-            $attachmentPath = $request->file('attachment')->store('attachments', 'public');
+            $file = $request->file('attachment');
+            $mimeType = $file->getMimeType();
+
+            if (str_starts_with($mimeType, 'image')) {
+                $attachmentPath = $file->storeAs('root/picture', $file->getClientOriginalName(), 'public');
+            } elseif (str_starts_with($mimeType, 'video')) {
+                $attachmentPath = $file->storeAs('root/video', $file->getClientOriginalName(), 'public');
+            } else {
+                return response()->json(['error' => 'Invalid attachment type. Only images and videos are allowed.'], 400);
+            }
         }
 
         $message = Message::create([
@@ -38,23 +54,23 @@ class MessageController extends Controller
             'attachment_path' => $attachmentPath,
         ]);
 
-        Broadcast::channel('chatroom.' . $chatroomId, function ($user) {
-            return true;
-        });
-
-        broadcast(new MessageSent($message))->toOthers();
-        info('MessageSent event broadcasted', ['message' => $message]);
         return response()->json($message, 201);
     }
 
     /**
-     * List messages in a chatroom.
+     * List messages in a chatroom, including full URLs for attachments.
      */
     public function listMessages($chatroomId)
     {
         $messages = Message::where('chatroom_id', $chatroomId)
             ->with('user')
-            ->get();
+            ->get()
+            ->map(function ($message) {
+                if ($message->attachment_path) {
+                    $message->attachment_url = asset('storage/' . $message->attachment_path);
+                }
+                return $message;
+            });
 
         return response()->json($messages);
     }

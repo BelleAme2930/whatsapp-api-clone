@@ -1,27 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Chatroom Listener</title>
-    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+    <title>Pusher Test</title>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <script>
+
+        // Enable pusher logging - don't include this in production
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('6cf3a8a4cc81717824c3', {
+            cluster: 'ap2'
+        });
+
+        var channel = pusher.subscribe('chatroom.1');
+
+        channel.bind('pusher:subscription_succeeded', function(members) {
+            alert('successfully subscribed!');
+        });
+
+        channel.bind('message.sent', function(data) {
+            alert('ok!');
+        });
+    </script>
 </head>
 <body>
-<h1>Chatroom Listener</h1>
-<div id="messages"></div>
-<script>
-    const pusher = new Pusher('72535f3c20de782f6400', {
-        cluster: 'ap2',
-        encrypted: true
-    });
-
-    const chatroomId = '1';
-    const channel = pusher.subscribe('chatroom.' + chatroomId);
-
-    channel.bind('App\\Events\\MessageSent', function(data) {
-        console.log("Received message data:", data);
-        const messagesDiv = document.getElementById('messages');
-        messagesDiv.innerHTML += '<p>' + data.message.message + '</p>';
-    });
-</script>
+<h1>Pusher Test</h1>
+<p>
+    Try publishing an event to channel <code>my-channel</code>
+    with event name <code>my-event</code>.
+</p>
 </body>
-</html>
