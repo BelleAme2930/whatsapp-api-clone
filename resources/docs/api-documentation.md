@@ -29,7 +29,7 @@
 ```json
 {
   "name": "John Doe",
-  "email": "johndoe@example.com",
+  "email": "john@example.com",
   "password": "password",
   "password_confirmation": "password"
 }
@@ -90,7 +90,7 @@
 
 ```json
 {
-  "email": "johndoe@example.com",
+  "email": "john@example.com",
   "password": "password"
 }
 ```
@@ -103,11 +103,11 @@
 ```json
 {
   "message": "Login successful.",
-  "token": "2|KymEiAGRGP6uIbNCI7gH4dRnmMdPIamI863ccZcQc210108f",
+  "token": "{{token}}",
   "user": {
     "id": 1,
     "name": "John Doe",
-    "email": "johndoe@example.com",
+    "email": "john@example.com",
     "created_at": "2024-11-02"
   }
 }
@@ -494,7 +494,7 @@ Authorization: Bearer {token}
     "user": {
       "id": 1,
       "name": "John Doe",
-      "email": "johndoe@example.com"
+      "email": "john@example.com"
     }
   },
   {
